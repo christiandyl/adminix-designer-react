@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const WorkflowDesigner = ({
   workflow: { frameEl, path, workflowId },
@@ -8,7 +8,7 @@ const WorkflowDesigner = ({
   height,
   onSave,
   onDeploy,
-  primaryColor,
+  colorPrimary,
   fontSize,
   disableMessages,
 }) => {
@@ -40,7 +40,7 @@ const WorkflowDesigner = ({
     };
   }, [onSave, onDeploy]);
 
-  const pathWithSettings = `${path}&colorPrimary=${primaryColor}&fontSize=${fontSize}&disableMessages=${disableMessages}`;
+  const pathWithSettings = `${path}&colorPrimary=${encodeURIComponent(colorPrimary)}&fontSize=${fontSize}&disableMessages=${disableMessages}`;
 
   return (
     <iframe

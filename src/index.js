@@ -127,7 +127,7 @@ const App = () => {
         height="500px"
         onSave={onSave}
         onDeploy={onDeploy}
-        primaryColor={fields.primaryColor}
+        colorPrimary={fields.primaryColor}
         fontSize={fields.fontSize}
         disableMessages={fields.disableMessages}
       />

@@ -21,11 +21,11 @@ const useWorkflow = ({
   ), [origin, workflowId, token]);
 
   const save = useCallback(() => {
-    frameEl.current.contentWindow.postMessage({ action: 'save' }, apiPath.origin);
+    frameEl.current.contentWindow.postMessage({ action: 'save' }, '*');
   }, [frameEl]);
   
   const deploy = useCallback(() => {
-    frameEl.current.contentWindow.postMessage({ action: 'deploy' }, apiPath.origin);
+    frameEl.current.contentWindow.postMessage({ action: 'deploy' }, '*');
   }, [frameEl]);
 
   return {
