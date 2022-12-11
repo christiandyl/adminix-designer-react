@@ -8,9 +8,12 @@ const WorkflowDesigner = ({
   height,
   onSave,
   onDeploy,
+  onDeploying,
+  onChanged,
   colorPrimary,
   fontSize,
   disableMessages,
+  disableActions,
 }) => {
   useEffect(() => {
     const callback = (e) => {
@@ -23,6 +26,10 @@ const WorkflowDesigner = ({
               onSave();
             } else if (decodedMsg.payload.status === 'deployed') {
               onDeploy();
+            } else if (decodedMsg.payload.status === 'deploying') {
+              onDeploying();
+            } else if (decodedMsg.payload.status === 'changed') {
+              onChanged();
             } else {
               console.info('Unsupported status', decodedMsg.payload.status)
             }
@@ -38,9 +45,9 @@ const WorkflowDesigner = ({
     return () => {
       window.removeEventListener('message', callback);
     };
-  }, [onSave, onDeploy]);
+  }, [onSave, onDeploy, onDeploying, onChanged]);
 
-  const pathWithSettings = `${path}&colorPrimary=${encodeURIComponent(colorPrimary)}&fontSize=${fontSize}&disableMessages=${disableMessages}`;
+  const pathWithSettings = `${path}&colorPrimary=${encodeURIComponent(colorPrimary)}&fontSize=${fontSize}&disableMessages=${disableMessages}&disableActions=${disableActions}`;
 
   return (
     <iframe
@@ -59,6 +66,8 @@ const WorkflowDesigner = ({
 WorkflowDesigner.defaultProps = {
   onSave: () => {},
   onDeploy: () => {},
+  onDeploying: () => {},
+  onChanged: () => {},
 };
 
 export default WorkflowDesigner;
