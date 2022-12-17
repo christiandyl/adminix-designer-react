@@ -17,9 +17,10 @@ const App = () => {
     token: query.token,
     env: query.env,
     region: query.region,
-    primaryColor: query.primaryColor || 'red',
+    colorPrimary: query.colorPrimary || '#568CDC',
     fontSize: query.fontSize || 14,
     disableMessages: query.disableMessages,
+    disableActions: query.disableActions,
   });
 
   const workflow = useWorkflow({
@@ -45,6 +46,14 @@ const App = () => {
     alert('onDeploy callback');
   }, []);
 
+  const onDeploying = useCallback(() => {
+    alert('onDeploying callback');
+  }, []);
+  
+  const onChanged = useCallback(() => {
+    console.log('onChanged callback');
+  }, []);
+
   const onChange = useCallback((e) => {
     setFields({
       ...fields,
@@ -53,7 +62,7 @@ const App = () => {
   }, [setFields, fields]);
 
   const onSubmit = useCallback(() => {
-    window.location.replace(`${window.location.pathname}?workflowId=${fields.workflowId}&token=${fields.token}&env=${fields.env}&fields.region&primaryColor=${fields.primaryColor}&fontSize=${fields.fontSize}&disableMessages=${fields.disableMessages}`);
+    window.location.replace(`${window.location.pathname}?workflowId=${fields.workflowId}&token=${fields.token}&env=${fields.env}&fields.region&colorPrimary=${fields.colorPrimary}&fontSize=${fields.fontSize}&disableMessages=${fields.disableMessages}&disableActions=${disableActions}`);
   }, []);
 
   return (
@@ -95,7 +104,7 @@ const App = () => {
             <tr>
               <td>Primary color</td>
               <td>
-                <input name="primaryColor" value={fields.primaryToken} onChange={onChange} />
+                <input name="colorPrimary" value={fields.colorPrimary} onChange={onChange} />
               </td>
             </tr>
             <tr>
@@ -107,13 +116,25 @@ const App = () => {
             <tr>
               <td>Disable messages</td>
               <td>
-                <input name="disableMessages" value={fields.disableMessages} onChange={onChange} />
+                <select name="disableMessages" onChange={onChange}>
+                  <option value="true" selected={fields.disableMessages === 'true'}>Yes</option>
+                  <option value="false" selected={fields.disableMessages === 'false'}>No</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Disable actions</td>
+              <td>
+                <select name="disableActions" onChange={onChange}>
+                  <option value="true" selected={fields.disableActions === 'true'}>Yes</option>
+                  <option value="false" selected={fields.disableActions === 'false'}>No</option>
+                </select>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Save" />
       </form>
 
       <br/>
@@ -127,9 +148,12 @@ const App = () => {
         height="500px"
         onSave={onSave}
         onDeploy={onDeploy}
-        colorPrimary={fields.primaryColor}
+        onDeploying={onDeploying}
+        onChanged={onChanged}
+        colorPrimary={fields.colorPrimary}
         fontSize={fields.fontSize}
-        disableMessages={fields.disableMessages}
+        disableMessages={fields.disableMessages === 'true'}
+        disableActions={fields.disableActions === 'true'}
       />
     </>
   );

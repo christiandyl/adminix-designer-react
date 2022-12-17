@@ -16,24 +16,32 @@ const useWorkflow = ({
     }); 
   }, [env, region]);
 
-  const path = useMemo(() => (
-    apiPath ? `${apiPath.origin}/embedded/workflows/${workflowId}/edit?accessToken=${token}` : null
-  ), [origin, workflowId, token]);
+  const targetOrigin = useMemo(() => {
+    if (window.location.hostname === 'localhost') return '*';
+    return env === 'local' ? window.location.origin : apiPath.origin;
+  }, [env, apiPath]);
 
   const save = useCallback(() => {
-    frameEl.current.contentWindow.postMessage({ action: 'save' }, '*');
-  }, [frameEl]);
+    frameEl.current.contentWindow.postMessage({ action: 'save' }, targetOrigin);
+  }, [frameEl, targetOrigin]);
   
   const deploy = useCallback(() => {
-    frameEl.current.contentWindow.postMessage({ action: 'deploy' }, '*');
-  }, [frameEl]);
+    frameEl.current.contentWindow.postMessage({ action: 'deploy' }, targetOrigin);
+  }, [frameEl, targetOrigin]);
+  
+  const sendAccessToken = useCallback((accessToken) => {
+    frameEl.current.contentWindow.postMessage({ action: 'sendAccessToken', accessToken }, targetOrigin); 
+  }, [frameEl, targetOrigin]);
 
   return {
     workflowId,
-    path,
     frameEl,
     save,
     deploy,
+    sendAccessToken,
+    apiPath,
+    token,
+    targetOrigin,
   };
 };
 

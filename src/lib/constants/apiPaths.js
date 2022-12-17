@@ -2,20 +2,20 @@ const apiPaths = [
   {
     origin: '',
     env: 'local',
-    region: 'us',
+    region: 'eu',
   },
   {
-    origin: 'https://app-stage.adminix.io',
+    origin: 'app-stage.adminix.io',
     env: 'staging',
     region: 'us',
   },
   {
-    origin: 'https://app-eu.adminix.io',
+    origin: 'app-eu.adminix.io',
     env: 'production',
     region: 'eu',
   },
   {
-    origin: 'https://app.adminix.io',
+    origin: 'app.adminix.io',
     env: 'production',
     region: 'us',
   }

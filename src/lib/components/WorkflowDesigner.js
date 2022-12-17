@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 const WorkflowDesigner = ({
-  workflow: { frameEl, path, workflowId },
+  workflow: { frameEl, workflowId, apiPath, sendAccessToken, token, targetOrigin },
   style,
   className,
   width,
@@ -15,6 +15,10 @@ const WorkflowDesigner = ({
   disableMessages,
   disableActions,
 }) => {
+  const onLoad = useCallback(() => {
+    sendAccessToken(token)
+  }, [sendAccessToken, token]);
+
   useEffect(() => {
     const callback = (e) => {
       try {
@@ -47,11 +51,14 @@ const WorkflowDesigner = ({
     };
   }, [onSave, onDeploy, onDeploying, onChanged]);
 
-  const pathWithSettings = `${path}&colorPrimary=${encodeURIComponent(colorPrimary)}&fontSize=${fontSize}&disableMessages=${disableMessages}&disableActions=${disableActions}`;
+  if (!apiPath) return null;
+
+  const path = `${apiPath.origin === '' ? '' : `https://${apiPath.origin}`}/embedded/workflows/${workflowId}/edit?&colorPrimary=${encodeURIComponent(colorPrimary)}&fontSize=${fontSize}&disableMessages=${disableMessages}&disableActions=${disableActions}`;
 
   return (
     <iframe
-      src={pathWithSettings}
+      src={path}
+      onLoad={onLoad}
       width={width}
       height={height}
       frameBorder="0"
@@ -68,6 +75,12 @@ WorkflowDesigner.defaultProps = {
   onDeploy: () => {},
   onDeploying: () => {},
   onChanged: () => {},
+  width: '100%',
+  height: '500px',
+  colorPrimary: '#568CDC',
+  fontSize: 14,
+  disableMessages: false,
+  disableActions: false,
 };
 
 export default WorkflowDesigner;
